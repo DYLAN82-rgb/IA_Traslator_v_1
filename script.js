@@ -33,3 +33,24 @@ microphone.addEventListener('click', () => {
         translationResult.style.display = 'none'; // Oculta el resultado de la traducción
     }
 });
+ // Reemplaza la función translateSpeech
+ function translateSpeech(speech) {
+    const targetLanguage = 'en'; // Idioma de destino (en este caso, inglés)
+    const googleTranslateUrl = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLanguage}&dt=t&q=${encodeURI(speech)}`;
+
+    fetch(googleTranslateUrl)
+        .then(response => response.json())
+        .then(data => {
+            const translatedText = data[0][0][0];
+            translatedSpeech.textContent = translatedText;
+            translationResult.style.display = 'block'; // Muestra el resultado de la traducción
+            isTranslating = false;
+
+            // Llama a la función para hablar la traducción
+            speakTranslation(translatedText);
+        })
+        .catch(error => {
+            console.error('Error en la traducción:', error);
+            isTranslating = false;
+        });
+    }
